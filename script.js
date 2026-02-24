@@ -21,28 +21,29 @@
       return;
     }
 
-    // Площ на клишето в мм² и см²
-    const areaMm2 = width * height;
-    const areaCm2 = areaMm2 / 100;
+    // Площ на клишето в см²
+    const areaCm2 = (width * height) / 100;
 
-    // Кубатурата е см³ за 1 m². Ефективен пренос 30% от кубатурата за 1 m²
-    const effectiveInkPerSqM = inkCm3 * 0.30; // см³/m²
+    // Кубатурата е см³ за 1 m². Ефективен пренос 25% от кубатурата за 1 m²
+    const effectiveInkPerSqM = inkCm3 * 0.25; // см³/m²
 
-    // Отпечатана площ в m² = ширина (m) × линейни метри; консумация = ефективна кубатура за 1 m² × площ × запълненост
+    // Печатна площ = частта от клишето, запълнена с печат (площ × % запълненост)
+    const printedAreaCm2 = areaCm2 * (coverage / 100);
+
+    // Отпечатана площ в m² за консумация = ширина (m) × линейни метри
     const areaM2 = (width / 1000) * linearMeters;
     const inkConsumptionCm3Raw = (effectiveInkPerSqM > 0 && areaM2 > 0) ? effectiveInkPerSqM * areaM2 : 0;
     const inkConsumptionCm3 = inkConsumptionCm3Raw * (coverage / 100);
     const inkConsumptionLiters = inkConsumptionCm3 / 1000;
 
     const html = [
-      { label: 'Площ на клишето', value: round(areaMm2, 2), unit: 'мм²' },
-      { label: 'Площ (см²)', value: round(areaCm2, 2), unit: 'см²' },
+      { label: 'Площ на клишето', value: round(areaCm2, 2), unit: 'см²' },
+      { label: 'Печатна площ:', value: round(printedAreaCm2, 2), unit: 'см²' },
     ];
 
     if (linearMeters > 0) {
       html.push(
-        { label: 'Консумация мастило', value: round(inkConsumptionLiters, 3), unit: 'л', highlight: true },
-        { label: 'Консумация мастило', value: round(inkConsumptionCm3, 2), unit: 'см³' }
+        { label: 'Консумация мастило', value: round(inkConsumptionLiters, 3), unit: 'л', highlight: true }
       );
     }
 
