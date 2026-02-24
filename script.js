@@ -25,11 +25,12 @@
     const areaMm2 = width * height;
     const areaCm2 = areaMm2 / 100;
 
-    // Вала пренася 50% върху 1 см², клишето предава 50% на филма → 50% × 50% = 25% от кубатурата
-    const effectiveInkCm3 = inkCm3 * 0.25;
+    // Кубатурата е см³ за 1 m². Ефективен пренос 30% от кубатурата за 1 m²
+    const effectiveInkPerSqM = inkCm3 * 0.30; // см³/m²
 
-    // Консумация мастило с ефективната кубатура (25% пренос) × % запълненост на клишето
-    const inkConsumptionCm3Raw = (effectiveInkCm3 > 0 && linearMeters > 0) ? (1000 * effectiveInkCm3 * linearMeters) / height : 0;
+    // Отпечатана площ в m² = ширина (m) × линейни метри; консумация = ефективна кубатура за 1 m² × площ × запълненост
+    const areaM2 = (width / 1000) * linearMeters;
+    const inkConsumptionCm3Raw = (effectiveInkPerSqM > 0 && areaM2 > 0) ? effectiveInkPerSqM * areaM2 : 0;
     const inkConsumptionCm3 = inkConsumptionCm3Raw * (coverage / 100);
     const inkConsumptionLiters = inkConsumptionCm3 / 1000;
 
